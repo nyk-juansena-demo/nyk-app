@@ -1,5 +1,6 @@
 name: Build image and bump manifests
 on:
+  workflow_dispatch: {}  
   push:
     branches: [ main ]
     paths:
