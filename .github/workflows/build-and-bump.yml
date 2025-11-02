@@ -11,9 +11,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: write         # needed for PR creation metadata
-      packages: write         # GHCR push
-      pull-requests: write    # open PR
+      contents: write
+      packages: write
+      pull-requests: write
     env:
       IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/nyk-web
       NEW_TAG: ${{ github.sha }}
@@ -43,13 +43,12 @@ jobs:
             ${{ env.IMAGE_NAME }}:latest
             ${{ env.IMAGE_NAME }}:${{ env.NEW_TAG }}
 
-      # === Key fixes start here ===
       - name: Checkout manifests repo (nyk-deploy)
         uses: actions/checkout@v4
         with:
           repository: ${{ env.MANIFESTS_REPO }}
           ref: ${{ env.MANIFESTS_BRANCH }}
-          token: ${{ secrets.MANIFESTS_REPO_TOKEN }}   # fine-grained PAT with Contents+PR write
+          token: ${{ secrets.MANIFESTS_REPO_TOKEN }}
           path: manifests
 
       - name: Install ruamel.yaml
