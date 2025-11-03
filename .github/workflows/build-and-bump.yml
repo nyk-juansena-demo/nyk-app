@@ -86,3 +86,4 @@ jobs:
           body: "Automated bump from nyk-app build."
           branch: bump-${{ env.NEW_TAG }}
           base: ${{ env.MANIFESTS_BRANCH }}
+          
