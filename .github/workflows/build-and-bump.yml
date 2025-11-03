@@ -20,6 +20,7 @@ jobs:
       MANIFESTS_REPO: ${{ github.repository_owner }}/nyk-deploy
       MANIFESTS_BRANCH: main
       OVERLAY_PATH: k8s/overlays/dev
+
     steps:
       - name: Checkout app repo
         uses: actions/checkout@v4
@@ -58,22 +59,22 @@ jobs:
         working-directory: manifests/${{ env.OVERLAY_PATH }}
         run: |
           python - <<'PY'
-from ruamel.yaml import YAML
-p="kustomization.yaml"
-y=YAML()
-d=y.load(open(p))
-name="${{ env.IMAGE_NAME }}"
-imgs=d.get("images",[])
-for i in imgs:
-    if i.get("name")==name:
-        i["newName"]=name
-        i["newTag"]="${{ env.NEW_TAG }}"
-        break
-else:
-    imgs.append({"name":name,"newName":name,"newTag":"${{ env.NEW_TAG }}"})
-d["images"]=imgs
-y.dump(d, open(p,"w"))
-PY
+          from ruamel.yaml import YAML
+          p="kustomization.yaml"
+          y=YAML()
+          d=y.load(open(p))
+          name="${{ env.IMAGE_NAME }}"
+          imgs=d.get("images",[])
+          for i in imgs:
+            if i.get("name")==name:
+              i["newName"]=name
+              i["newTag"]="${{ env.NEW_TAG }}"
+              break
+            else:
+              imgs.append({"name":name,"newName":name,"newTag":"${{ env.NEW_TAG }}"})
+              d["images"]=imgs
+              y.dump(d, open(p,"w"))
+          PY
 
       - name: Create PR in manifests repo
         uses: peter-evans/create-pull-request@v6
